@@ -5,7 +5,7 @@
  * Description: Advanced yet accessible content permissions. Give users or groups type-specific roles. Enable or block access for specific posts or terms.
  * Author:      Crowd Favorite
  * Author URI:  http://crowdfavorite.com
- * Version:     1.0
+ * Version:     1.0.1
  */
 
 define('CF_MEGA_MENUS_DIR', trailingslashit(dirname(__FILE__)));
@@ -62,6 +62,9 @@ class CF_Mega_Menus {
 			if (!empty($mega_menu_id) && ($mega_menu = get_post($mega_menu_id)) && !is_wp_error($mega_menu)) {
 				// We have a mega menu to display.
 				$wrapper_classes = apply_filters('cf-mega-menu-classes', array('cf-mega-menu'), $item, $depth, $args);
+				global $post;
+				$old_post = $post;
+				$post = $mega_menu;
 				setup_postdata($mega_menu);
 				ob_start();
 				the_content();
@@ -72,6 +75,8 @@ class CF_Mega_Menus {
 					$output .= $contents;
 					$output .= "</div>\n";
 				}
+				$post = $old_post;
+				setup_postdata($post);
 			}
 		}
 		return $output;
